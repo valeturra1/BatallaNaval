@@ -1,6 +1,7 @@
 package com.example.batallanaval.view;
 
 import com.example.batallanaval.model.*;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -89,7 +90,7 @@ public class GameView {
                 new Frigate(), new Frigate(), new Frigate(), new Frigate()
         };
 
-        for (int i = 0; i < ships.length; i++) {
+        for  (int i = 0; i < ships.length; i++) {
             IShip model = ships[i];
             ShipView ship = new ShipView(model);
             fleetList.add(ship);
@@ -107,18 +108,23 @@ public class GameView {
 
     private void handleMouseMoveOnGrid(MouseEvent e) {
         if (selectedShip == null) return;
-        double x = Math.floor(e.getSceneX() / TILE_SIZE) * TILE_SIZE;
-        double y = Math.floor(e.getSceneY() / TILE_SIZE) * TILE_SIZE;
+
+        Point2D local = overlay.sceneToLocal(e.getSceneX(), e.getSceneY());
+        double x = Math.floor(local.getX() / TILE_SIZE) * TILE_SIZE;
+        double y = Math.floor(local.getY() / TILE_SIZE) * TILE_SIZE;
+
         selectedShip.previewAt(x, y);
     }
 
     private void handleClickOnGrid(MouseEvent e) {
         if (selectedShip == null) return;
 
-        double x = Math.floor(e.getSceneX() / TILE_SIZE) * TILE_SIZE;
-        double y = Math.floor(e.getSceneY() / TILE_SIZE) * TILE_SIZE;
+        Point2D local = overlay.sceneToLocal(e.getSceneX(), e.getSceneY());
+        double x = Math.floor(local.getX() / TILE_SIZE) * TILE_SIZE;
+        double y = Math.floor(local.getY() / TILE_SIZE) * TILE_SIZE;
 
-        if (placementValidator != null && !placementValidator.canPlaceShip(selectedShip, x, y)) {
+        if (placementValidator != null &&
+                !placementValidator.canPlaceShip(selectedShip, x, y)) {
             return;
         }
 
